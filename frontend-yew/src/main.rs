@@ -34,37 +34,15 @@ impl Component for WebSocketComponent {
         match msg {
             Msg::Connect => {
                 let ws = WebSocket::new("ws://localhost:3000/ws").unwrap();
-                let cloned_ws = ws.clone();
+                let link = ctx.link().clone();
 
-
-                let cb =Closure::<dyn FnMut(_)>::new(move |e: MessageEvent| {
-                    // Handle difference Text/Binary,...
-                    if let Ok(abuf) = e.data().dyn_into::<js_sys::ArrayBuffer>() {
-                        let array = js_sys::Uint8Array::new(&abuf);
-                        let len = array.byte_length() as usize;
-                        // here you can for example use Serde Deserialize decode the message
-                        // for demo purposes we switch back to Blob-type and send off another binary message
-                        cloned_ws.set_binary_type(web_sys::BinaryType::Blob);
-                       
-                    } else if let Ok(blob) = e.data().dyn_into::<web_sys::Blob>() {
-                        // better alternative to juggling with FileReader is to use https://crates.io/crates/gloo-file
-                        let fr = web_sys::FileReader::new().unwrap();
-                        let fr_c = fr.clone();
-                        // create onLoadEnd callback
-                        let onloadend_cb = Closure::<dyn FnMut(_)>::new(move |_e: web_sys::ProgressEvent| {
-                            let array = js_sys::Uint8Array::new(&fr_c.result().unwrap());
-                            let len = array.byte_length() as usize;
-                            // here you can for example use the received image/png data
-                        });
-                        fr.set_onloadend(Some(onloadend_cb.as_ref().unchecked_ref()));
-                        fr.read_as_array_buffer(&blob).expect("blob not readable");
-                        onloadend_cb.forget();
-                    } else if let Ok(txt) = e.data().dyn_into::<js_sys::JsString>() {
-                    } else {
+                let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |e: MessageEvent| {
+                    if let Ok(txt) = e.data().dyn_into::<js_sys::JsString>() {
+                        link.send_message(Msg::Received(txt.as_string().unwrap()));
                     }
                 });
 
-                ws.set_onmessage(Some(cb.as_ref().unchecked_ref()));
+                ws.set_onmessage(Some(onmessage_callback.as_ref().unchecked_ref()));
                 self.ws = Some(ws);
                 true
             }
