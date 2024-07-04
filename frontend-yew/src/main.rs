@@ -76,7 +76,9 @@ impl Component for WebSocketComponent {
                     value={self.input_value.clone()}
                     oninput={ctx.link().callback(|e: InputEvent| {
                         let input: HtmlInputElement = e.target().and_then(|t| t.dyn_into::<HtmlInputElement>().ok()).unwrap();
+                        
                         Msg::InputChanged(input.value())
+                        
                     })}
                 />
                 <button onclick={ctx.link().callback(|_| Msg::Send)}>{ "Send" }</button>
@@ -87,19 +89,11 @@ impl Component for WebSocketComponent {
 
 #[function_component]
 fn App() -> Html {
-    let counter = use_state(|| 0);
-    let onclick = {
-        let counter = counter.clone();
-        move |_| {
-            let value = *counter + 3;
-            counter.set(value);
-        }
-    };
+
 
     html! {
         <div>
-            <button {onclick}>{ "+1" }</button>
-            <p>{ *counter }</p>
+         
             <WebSocketComponent />
         </div>
     }
