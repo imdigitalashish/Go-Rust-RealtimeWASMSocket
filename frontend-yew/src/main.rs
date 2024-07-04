@@ -93,7 +93,7 @@ fn App() -> Html {
 
     html! {
         <div>
-         
+            <h1>{ "WebSocket Example" }</h1>
             <WebSocketComponent />
         </div>
     }
