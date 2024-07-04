@@ -35,14 +35,13 @@ impl Component for WebSocketComponent {
             Msg::Connect => {
                 let ws = WebSocket::new("ws://localhost:3000/ws").unwrap();
                 let link = ctx.link().clone();
-
                 let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |e: MessageEvent| {
                     if let Ok(txt) = e.data().dyn_into::<js_sys::JsString>() {
                         link.send_message(Msg::Received(txt.as_string().unwrap()));
                     }
                 });
-
                 ws.set_onmessage(Some(onmessage_callback.as_ref().unchecked_ref()));
+                onmessage_callback.forget();
                 self.ws = Some(ws);
                 true
             }

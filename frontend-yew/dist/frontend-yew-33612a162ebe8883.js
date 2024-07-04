@@ -674,15 +674,15 @@ function __wbg_get_imports() {
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbindgen_closure_wrapper2796 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper2800 = function(arg0, arg1, arg2) {
         const ret = makeClosure(arg0, arg1, 320, __wbg_adapter_24);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper3651 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper3654 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 398, __wbg_adapter_27);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper3690 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper3691 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 402, __wbg_adapter_30);
         return addHeapObject(ret);
     };
